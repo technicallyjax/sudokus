@@ -1,11 +1,15 @@
-# Import Module  
-import tabula 
+# Import Modules  
+import tabula
+import jpype
+import os
+os.environ["JAVA_HOME"] ="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"
 
-file_path = 'alphadoku-symmetric-expert-puzzle-20'
+file_path = 'alphadoku-symmetric-expert-puzzle-44'
   
 # Read PDF File 
 df = tabula.read_pdf(f'{file_path}.pdf')[0]
-  
+
+print("Converting...")
 # Convert into Excel File 
 df.to_excel(f'{file_path}.xlsx',index=False)
 
@@ -39,7 +43,7 @@ code = {'A': 1,
         'X': 24,
         'Y': 25}
 
-
+print("Reformatting...")
 # reformat
 def copy_formatting(source_wb, target_wb):
         target_ws = target_wb['Sheet1']
@@ -55,7 +59,7 @@ def copy_formatting(source_wb, target_wb):
 alpha = load_workbook(f'{file_path}.xlsx')
 copy_formatting(load_workbook('formatting_template.xlsx'),alpha)
 
-
+print("Numberising...")
 for row in alpha['Sheet1'].iter_rows():
     for cell in row:
         if cell.value == None:
@@ -71,8 +75,8 @@ for row in alpha['Sheet1'].iter_rows():
                                  color = '000000')
 
 
-
-alpha.save('new_sudoku.xlsx')
+print("Saving...")
+alpha.save(f'new_sudoku{file_path[10]}{file_path[-2:]}.xlsx')
 
 print("Success!")
 
